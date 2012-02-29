@@ -28,16 +28,25 @@
             
             $('.view-image').click(function(e) {
                 v.show($(this).attr('href'));
-                
-                if (history && history.pushState) {
-                    console.log('push state');
-                    history.pushState({}, "nice things", $(this).attr('data-name'));
-                }
 
                 e.preventDefault();
             });
-
             
+            v.show = function(a) {
+                    var img = $('li.current > div > span > img').attr('src').replace(/.*\/(.*)/, "$1");
+                    console.log(img);
+                    
+                    if (history && history.pushState) {
+                        console.log('push state');
+                        history.pushState({}, "nice things", img);
+                    }
+            };
+
+            v.close = function() {
+                if (history && history.pushState) {
+                    history.pushState({}, "nice things", "/");
+                }
+            };
         });
 
         
