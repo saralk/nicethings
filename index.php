@@ -10,7 +10,7 @@
 	<!-- Styles & scripts -->
 	<link rel="stylesheet" href="styles/css/main.css">
 	<script src="scripts/min/jquery.min.js"></script>
-	<script src="scripts/min/view.min.js?auto"></script>
+	<script src="http://nicethings.me/scripts/min/view.min.js"></script>
 	<script src="http://use.typekit.com/feu7nwp.js"></script>
 	<script>try{Typekit.load();}catch(e){}</script>
 	<script>
@@ -21,7 +21,26 @@
 			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
 			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
 			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-		})();
+        })();
+           
+        $(document).ready(function(e) {
+            v = new View($('.view-image'));
+            
+            $('.view-image').click(function(e) {
+                v.show($(this).attr('href'));
+                
+                if (history && history.pushState) {
+                    console.log('push state');
+                    history.pushState({}, "nice things", $(this).attr('data-name'));
+                }
+
+                e.preventDefault();
+            });
+
+            
+        });
+
+        
 	</script>
 
 </head>
@@ -37,15 +56,15 @@
 	$cwd = getcwd();
 	$dir = opendir("./things");
 	while (false !== ($file = readdir($dir))) { /* opendir/readdir */
-	    if($file != "." && $file != "..") {
-	    	$files[filectime($cwd . "/things/" . $file)] = $file;
+        if($file != "." && $file != "..") {
+	    	$files[] = $file;
 	    }
 	}
-	krsort($files);
+    krsort($files);
 ?>
 <?php foreach ($files as $file) : ?>
 		<li>
-			<a class="view" rel="nice-things" href="things/<?php echo $file; ?>">
+            <a class="view-image" rel="nice-things" data-name="<? echo $file; ?>" href="things/<?php echo $file; ?>">
 				<img src="createThumb.php?src=things/<?php echo $file; ?>&w=128&h=128" width="128" height="128" />
 			</a>
 		</li>
