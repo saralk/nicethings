@@ -71,7 +71,6 @@
 	<ul>
 <?php
 	$files = array();
-	$cwd = getcwd();
 	$dir = opendir("./things");
 	while (false !== ($file = readdir($dir))) { /* opendir/readdir */
         if($file != "." && $file != "..") {
