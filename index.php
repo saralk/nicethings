@@ -22,31 +22,40 @@
 			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
 			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
         })();
-           
+        
         $(document).ready(function(e) {
             v = new View($('.view-image'));
             
-            $('.view-image').click(function(e) {
-                v.show($(this).attr('href'));
-
-                e.preventDefault();
-            });
-            
-            v.show = function(a) {
-                    var img = $('li.current > div > span > img').attr('src').replace(/.*\/(.*)/, "$1");
-                    console.log(img);
-                    
-                    if (history && history.pushState) {
-                        console.log('push state');
-                        history.pushState({}, "nice things", img);
-                    }
+            showExtension = function(a) {
+                var img = $('li.current > div > span > img').attr('src').replace(/.*\/(.*)/, "$1");
+                if (history && history.pushState) {
+                    history.pushState({}, "nice things", img);
+                }
             };
 
-            v.close = function() {
+            closeExtension = function() {
                 if (history && history.pushState) {
                     history.pushState({}, "nice things", "/");
                 }
             };
+
+            showBaseFn = v.show;
+            v.show = function(e) {
+                showBaseFn.call(v, e);
+                showExtension(e);
+            }
+
+            closeBaseFn = v.close;
+            v.close = function(e) {
+                closeBaseFn.call(v);
+                closeExtension();
+            }
+
+            $('.view-image').click(function(e) {
+                v.show($(this).attr('href'));
+                return false;
+            });
+
         });
 
         
